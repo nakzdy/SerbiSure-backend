@@ -45,9 +45,12 @@ class LoginView(APIView):
                 token, created = Token.objects.get_or_create(user=user)
                 return Response({
                     "status": "success",
-                    "data": {"token": token.key}
+                    "data": {
+                        "token": token.key,
+                        "user": UserSerializer(user).data
+                    }
                 }, status=status.HTTP_200_OK)
-            return Response({"status": "error", "message": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"status": "error", "message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
         return Response({"status": "error", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 class ServiceListView(generics.ListAPIView):
