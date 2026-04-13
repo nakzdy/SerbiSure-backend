@@ -106,7 +106,11 @@ class GoogleSyncView(APIView):
             
             if not user:
                 # 2. If not found, register new user (Shadow Profile)
-                password = request.data.get('password', CustomUser.objects.make_random_password())
+                password = request.data.get('password')
+                if not password:
+                    from django.utils.crypto import get_random_string
+                    password = get_random_string(32)
+                
                 serializer = RegisterSerializer(data={
                     'email': email,
                     'password': password,
