@@ -10,6 +10,7 @@ urlpatterns = [
     path('auth/login/', views.LoginView.as_view(), name='login'),
     path('auth/google-sync/', views.GoogleSyncView.as_view(), name='google-sync'),
     path('services/', views.ServiceListView.as_view(), name='service-list'),
+    path('services/<int:pk>/', views.ServiceDetailView.as_view(), name='service-detail'),
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('', include(router.urls)),
 ]
