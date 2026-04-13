@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# Install dependencies
+# Install core packaging tools first (Required for Python 3.12 + Swagger)
+echo "Upgrading pip and installing core packaging tools..."
+python3.12 -m pip install --upgrade pip setuptools wheel
+
+# Install dependencies from requirements.txt
 echo "Installing dependencies..."
 python3.12 -m pip install -r requirements.txt
 
