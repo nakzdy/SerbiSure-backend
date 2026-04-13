@@ -6,11 +6,16 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from .models import CustomUser, WorkerProfile, Service, Booking
 from .serializers import UserSerializer, LoginSerializer, RegisterSerializer, ServiceSerializer, BookingSerializer
+import logging
+
+# Module 3: Debugging/Logging Configuration
+logger = logging.getLogger(__name__)
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     
     def post(self, request):
+        logger.info("New registration attempt detected.")
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -35,6 +40,7 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
     
     def post(self, request):
+        logger.info("Manual login attempt.")
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']
@@ -100,6 +106,7 @@ class GoogleSyncView(APIView):
     def post(self, request):
         try:
             email = request.data.get('email')
+            logger.info(f"Google sync requested for: {email}")
             
             if not email:
                 return Response({"status": "error", "message": "Email is required"}, status=status.HTTP_400_BAD_REQUEST)
