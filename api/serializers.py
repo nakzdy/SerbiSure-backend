@@ -42,7 +42,10 @@ class ServiceSerializer(serializers.ModelSerializer):
         fields = ['id', 'provider', 'name', 'description', 'category', 'price']
 
 class BookingSerializer(serializers.ModelSerializer):
+    service_details = ServiceSerializer(source='service', read_only=True)
+    homeowner_details = UserSerializer(source='homeowner', read_only=True)
+    
     class Meta:
         model = Booking
-        fields = '__all__'
-        read_only_fields = ['homeowner'] # homeowner should be automatically set to the logged-in user
+        fields = ['id', 'homeowner', 'homeowner_details', 'service', 'service_details', 'status', 'scheduled_date']
+        read_only_fields = ['homeowner']
