@@ -183,6 +183,20 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10
 }
 
+# Module 3: Swagger Documentation Settings
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Token': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': False,
+    'JSON_EDITOR': True,
+}
+
+
 # --- Security Settings ---
 # HTTPS and SSL Redirection
 SECURE_SSL_REDIRECT = env('DJANGO_SECURE_SSL_REDIRECT')

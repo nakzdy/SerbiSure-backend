@@ -1,4 +1,6 @@
 from rest_framework import generics, status, viewsets
+from drf_yasg.utils import swagger_auto_schema
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
@@ -8,7 +10,8 @@ from django.contrib.auth import authenticate
 from .models import CustomUser, WorkerProfile, Service, Booking
 from .serializers import (
     UserSerializer, LoginSerializer, RegisterSerializer, 
-    ServiceSerializer, BookingSerializer, WorkerProfileSerializer
+    ServiceSerializer, ServiceCreateSerializer, BookingSerializer, 
+    BookingCreateSerializer, WorkerProfileSerializer
 )
 import logging
 
@@ -19,7 +22,9 @@ class RegisterView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
     
+    @swagger_auto_schema(request_body=RegisterSerializer)
     def post(self, request):
+
         logger.info("New registration attempt detected.")
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
@@ -45,7 +50,9 @@ class LoginView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
     
+    @swagger_auto_schema(request_body=LoginSerializer)
     def post(self, request):
+
         logger.info("Manual login attempt.")
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
@@ -70,7 +77,12 @@ class ServiceListView(generics.ListCreateAPIView):
     serializer_class = ServiceSerializer
     permission_classes = [IsServiceWorkerOrReadOnly] # Module 3: Anyone can View, Only Workers can Create
 
+    @swagger_auto_schema(request_body=ServiceCreateSerializer)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
     def list(self, request, *args, **kwargs):
+
         queryset = self.get_queryset()
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -93,6 +105,14 @@ class ServiceDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Service.objects.all()
     serializer_class = ServiceSerializer
     permission_classes = [IsServiceProviderOrReadOnly] # Module 3: Anyone can View, Only Owner can Edit/Delete
+
+    @swagger_auto_schema(request_body=ServiceCreateSerializer)
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    @swagger_auto_schema(request_body=ServiceCreateSerializer)
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -117,7 +137,9 @@ class BookingViewSet(viewsets.ModelViewSet):
         # Automatically tie the booking to the logged in user
         serializer.save(homeowner=self.request.user)
 
+    @swagger_auto_schema(request_body=BookingCreateSerializer)
     def create(self, request, *args, **kwargs):
+
         # Only Homeowners can initiate a booking
         if request.user.role != 'homeowner':
             return Response({

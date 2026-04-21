@@ -41,6 +41,11 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = ['id', 'provider', 'name', 'description', 'category', 'price']
 
+class ServiceCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Service
+        fields = ['name', 'description', 'category', 'price']
+
 class BookingSerializer(serializers.ModelSerializer):
     service_details = ServiceSerializer(source='service', read_only=True)
     homeowner_details = UserSerializer(source='homeowner', read_only=True)
@@ -49,3 +54,8 @@ class BookingSerializer(serializers.ModelSerializer):
         model = Booking
         fields = ['id', 'homeowner', 'homeowner_details', 'service', 'service_details', 'status', 'scheduled_date']
         read_only_fields = ['homeowner']
+
+class BookingCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = ['service', 'scheduled_date']

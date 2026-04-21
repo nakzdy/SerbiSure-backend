@@ -43,6 +43,9 @@ class Service(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['id']
+
 class Booking(models.Model):
     STATUS_CHOICES = (
         ('pending', 'Pending'),
@@ -58,5 +61,5 @@ class Booking(models.Model):
     def __str__(self):
         return f"Booking for {self.service.name} by {self.homeowner.full_name}"
 
-    def __str__(self):
-        return f"Booking for {self.service.name} by {self.homeowner.full_name}"
+    class Meta:
+        ordering = ['id']
