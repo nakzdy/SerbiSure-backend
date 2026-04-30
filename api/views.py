@@ -53,7 +53,7 @@ class LoginView(APIView):
     @swagger_auto_schema(request_body=LoginSerializer)
     def post(self, request):
 
-        logger.info("Manual login attempt.")
+        print("[ALERT] Manual login attempt detected.")
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data['email']

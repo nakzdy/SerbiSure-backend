@@ -176,7 +176,7 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '10/minute',  # Lowered for demo — change back to '100/day' after recording
+        'anon': '10/minute', 
         'user': '1000/day'
     },
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
