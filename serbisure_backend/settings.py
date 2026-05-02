@@ -28,6 +28,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Take environment variables from .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
+# --- Environment Validation ---
+# Ensure critical variables are set, especially in production
+if not env('DEBUG', default=False):
+    if env('SECRET_KEY', default='') == 'django-insecure-default-change-me-in-production':
+        raise ValueError("SECRET_KEY must be changed in production!")
+    if not env('DATABASE_URL', default=''):
+        raise ValueError("DATABASE_URL must be set in production!")
+# ------------------------------
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
